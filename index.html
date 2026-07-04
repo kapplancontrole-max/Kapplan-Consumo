@@ -94,6 +94,10 @@
     const URL_GAS = 'https://script.google.com/macros/s/AKfycbw4WG8kjvhsYHwn0lKd59q8kMonyKltpFw5AmvCgWC2OAFvST7RKq2M9OkycFdw2LmP/exec';
 
     window.onload = function() {
+        // Esconde o erro padrão ao carregar a página de forma limpa
+        const erro = document.getElementById('erro-login');
+        if (erro) erro.style.display = 'none';
+
         if (sessionStorage.getItem('adminLogado') === 'true') {
             exibirDashboard();
         }
@@ -110,24 +114,30 @@
         btn.disabled = true;
 
         try {
+            // Enviando como text/plain evita requisições complexas (OPTIONS preflight) do CORS que o Google Apps Script rejeita
             const resposta = await fetch(URL_GAS, {
                 method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8'
+                },
                 body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "verificar_login" })
             });
             const resultado = await resposta.json();
 
-            if (resultado.status === "sucesso") {
+            if (resultado.status === \"sucesso\") {
                 sessionStorage.setItem('adminLogado', 'true');
                 sessionStorage.setItem('adminSenha', senha);
                 exibirDashboard();
             } else {
-                erro.innerText = "Senha Master incorreta!";
+                erro.innerText = resultado.mensagem || "Senha Master incorreta!";
                 erro.style.display = 'block';
                 btn.innerText = 'Entrar no Sistema';
                 btn.disabled = false;
             }
         } catch (e) {
-            erro.innerText = "Erro ao conectar ao servidor.";
+            console.error("Erro de conexão:", e);
+            erro.innerText = "Erro ao conectar ao servidor. Verifique a nova versão do Apps Script.";
             erro.style.display = 'block';
             btn.innerText = 'Entrar no Sistema';
             btn.disabled = false;
@@ -145,26 +155,33 @@
         try {
             const resposta = await fetch(URL_GAS, {
                 method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8'
+                },
                 body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "buscar_todos_os_dados" })
             });
             const resultado = await resposta.json();
 
-            if (resultado.status === "sucesso") {
+            if (resultado.status === \"sucesso\") {
                 renderizarPainelSindico(resultado.dados);
+            } else {
+                throw new Error(resultado.mensagem);
             }
         } catch (error) {
+            console.error("Erro ao carregar dados:", error);
             document.getElementById('corpo-tabela').innerHTML = "<tr><td colspan='3' style='color: var(--danger); text-align: center;'>Erro ao atualizar tabela.</td></tr>";
         }
     }
 
     function renderizarPainelSindico(dados) {
         const corpo = document.getElementById('corpo-tabela');
-        corpo.innerHTML = "";
+        corpo.innerHTML = \"\";
         document.getElementById('total-registros').innerText = dados.length;
 
         if (dados.length === 0) {
-            document.getElementById('total-geral').innerText = "0.00 kWh";
-            corpo.innerHTML = "<tr><td colspan='3' style='text-align: center;'>Nenhum dado encontrado.</td></tr>";
+            document.getElementById('total-geral').innerText = \"0.00 kWh\";
+            corpo.innerHTML = \"<tr><td colspan='3' style='text-align: center;'>Nenhum dado encontrado.</td></tr>\";
             return;
         }
 
@@ -187,7 +204,7 @@
         for (const vaga in ultimasLeiturasPorVaga) {
             somaTotalCondominio += ultimasLeiturasPorVaga[vaga];
         }
-        document.getElementById('total-geral').innerText = somaTotalCondominio.toFixed(2) + " kWh";
+        document.getElementById('total-geral').innerText = somaTotalCondominio.toFixed(2) + \" kWh\";
     }
 
     async function processarFechamentoMensal() {
@@ -197,45 +214,50 @@
         const corpoFechamento = document.getElementById('corpo-fechamento');
         const senha = sessionStorage.getItem('adminSenha');
 
-        if (!confirm("Tem certeza que deseja processar o faturamento agora? Esta ação gravará dados permanentes na planilha.")) {
+        if (!confirm(\"Tem certeza que deseja processar o faturamento agora? Esta ação gravará dados permanentes na planilha.\")) {
             return;
         }
 
-        btn.innerText = "Processando Fechamento...";
+        btn.innerText = \"Processando Fechamento...\";
         btn.disabled = true;
-        msg.style.display = "none";
+        msg.style.display = \"none\";
 
         try {
             const resposta = await fetch(URL_GAS, {
                 method: 'POST',
-                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "realizar_fechamento_mes" })
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8'
+                },
+                body: JSON.stringify({ vaga: \"ADMIN\", senha: senha, acao: \"realizar_fechamento_mes\" })
             });
             const resultado = await resposta.json();
 
-            if (resultado.status === "sucesso") {
-                msg.innerText = "✓ " + resultado.mensagem;
-                msg.style.display = "block";
+            if (resultado.status === \"sucesso\") {
+                msg.innerText = \"✓ \" + resultado.mensagem;
+                msg.style.display = \"block\";
                 
-                corpoFechamento.innerHTML = "";
+                corpoFechamento.innerHTML = \"\";
                 resultado.dados.forEach(item => {
                     corpoFechamento.innerHTML += `<tr>
                         <td><strong>#${item.idFechamento}</strong></td>
                         <td><strong>${item.vaga}</strong></td>
                         <td>${item.leituraAnterior.toFixed(2)}</td>
                         <td>${item.leituraAtual.toFixed(2)}</td>
-                        <td style="color: var(--accent); font-weight: bold;">${item.consumoPeriodo.toFixed(2)} kWh</td>
+                        <td style=\"color: var(--accent); font-weight: bold;\">${item.consumoPeriodo.toFixed(2)} kWh</td>
                     </tr>`;
                 });
                 
-                tabela.style.display = "table";
+                tabela.style.display = \"table\";
                 carregarDadosGlobais();
             } else {
-                alert("Erro: " + resultado.mensagem);
+                alert(\"Erro: \" + resultado.mensagem);
             }
         } catch (error) {
-            alert("Erro crítico de comunicação com o Google Apps Script.");
+            console.error("Erro no fechamento:", error);
+            alert(\"Erro crítico de comunicação com o Google Apps Script.\");
         } finally {
-            btn.innerText = "Realizar Fechamento Mensal";
+            btn.innerText = \"Realizar Fechamento Mensal\";
             btn.disabled = false;
         }
     }
