@@ -38,6 +38,7 @@
     <form onsubmit="autenticarAdmin(event)">
         <label>Senha Master:</label>
         <input type="password" id="senha-admin" placeholder="Digite a senha ADM" required>
+        <!-- Alterado display de 'block' para 'none' para não iniciar com erro falso na tela -->
         <div id="erro-login" style="color: var(--danger); font-size: 13px; margin-bottom: 15px; display: none; font-weight: 600;"></div>
         <button type="submit" class="btn" id="btn-entrar" style="width: 100%; margin-top: 0;">Entrar no Sistema</button>
     </form>
@@ -189,7 +190,6 @@
         document.getElementById('total-geral').innerText = somaTotalCondominio.toFixed(2) + " kWh";
     }
 
-    // NOVA FUNÇÃO: Executa a ação do botão e exibe a tabela de fechamento processada pelo GAS
     async function processarFechamentoMensal() {
         const btn = document.getElementById('btn-fechamento');
         const msg = document.getElementById('msg-fechamento');
@@ -228,7 +228,7 @@
                 });
                 
                 tabela.style.display = "table";
-                carregarDadosGlobais(); // Recarrega o consumo global para sincronizar tudo
+                carregarDadosGlobais();
             } else {
                 alert("Erro: " + resultado.mensagem);
             }
