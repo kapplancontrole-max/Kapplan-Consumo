@@ -90,12 +90,10 @@
 </div>
 
 <script>
+    // URL do Apps Script do seu projeto atual
     const URL_GAS = 'https://script.google.com/macros/s/AKfycbw4WG8kjvhsYHwn0lKd59q8kMonyKltpFw5AmvCgWC2OAFvST7RKq2M9OkycFdw2LmP/exec';
 
     window.onload = function() {
-        const erro = document.getElementById('erro-login');
-        if (erro) erro.style.display = 'none';
-
         if (sessionStorage.getItem('adminLogado') === 'true') {
             exibirDashboard();
         }
@@ -112,24 +110,12 @@
         btn.disabled = true;
 
         try {
-            // Mudança para evitar o bloqueio de CORS do preflight OPTIONS do Google
-            const dadosEnviar = new URLSearchParams();
-            dadosEnviar.append('vaga', 'ADMIN');
-            dadosEnviar.append('senha', senha);
-            dadosEnviar.append('acao', 'verificar_login');
-
+            // Usando exatamente a mesma estrutura de requisição do seu projeto que funciona
             const resposta = await fetch(URL_GAS, {
                 method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: dadosEnviar.toString()
+                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "verificar_login" })
             });
-            
-            // Tratamento resiliente de JSON do Google Apps Script
-            const textoResposta = await resposta.text();
-            const resultado = JSON.parse(textoResposta);
+            const resultado = await resposta.json();
 
             if (resultado.status === "sucesso") {
                 sessionStorage.setItem('adminLogado', 'true');
@@ -142,8 +128,8 @@
                 btn.disabled = false;
             }
         } catch (e) {
-            console.error("Erro de conexão:", e);
-            erro.innerText = "Erro ao conectar. Verifique se o login ADMIN está na planilha e se publicou como Nova Versão.";
+            console.error(e);
+            erro.innerText = "Erro ao conectar ao servidor.";
             erro.style.display = 'block';
             btn.innerText = 'Entrar no Sistema';
             btn.disabled = false;
@@ -159,30 +145,17 @@
     async function carregarDadosGlobais() {
         const senha = sessionStorage.getItem('adminSenha');
         try {
-            const dadosEnviar = new URLSearchParams();
-            dadosEnviar.append('vaga', 'ADMIN');
-            dadosEnviar.append('senha', senha);
-            dadosEnviar.append('acao', 'buscar_todos_os_dados');
-
             const resposta = await fetch(URL_GAS, {
                 method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: dadosEnviar.toString()
+                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "buscar_todos_os_dados" })
             });
-            
-            const textoResposta = await resposta.text();
-            const resultado = JSON.parse(textoResposta);
+            const resultado = await resposta.json();
 
             if (resultado.status === "sucesso") {
                 renderizarPainelSindico(resultado.dados);
-            } else {
-                throw new Error(resultado.mensagem);
             }
         } catch (error) {
-            console.error("Erro ao carregar dados:", error);
+            console.error(error);
             document.getElementById('corpo-tabela').innerHTML = "<tr><td colspan='3' style='color: var(--danger); text-align: center;'>Erro ao atualizar tabela.</td></tr>";
         }
     }
@@ -214,8 +187,8 @@
         });
 
         let somaTotalCondominio = 0;
-        for (const vaga in ultimasLeituresPorVaga) {
-            somaTotalCondominio += ultimasLeituresPorVaga[vaga];
+        for (const vaga in ultimasLeiturasPorVaga) {
+            somaTotalCondominio += ultimasLeiturasPorVaga[vaga];
         }
         document.getElementById('total-geral').innerText = somaTotalCondominio.toFixed(2) + " kWh";
     }
@@ -236,22 +209,11 @@
         msg.style.display = "none";
 
         try {
-            const dadosEnviar = new URLSearchParams();
-            dadosEnviar.append('vaga', 'ADMIN');
-            dadosEnviar.append('senha', senha);
-            dadosEnviar.append('acao', 'realizar_fechamento_mes');
-
             const resposta = await fetch(URL_GAS, {
                 method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: dadosEnviar.toString()
+                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "realizar_fechamento_mes" })
             });
-            
-            const textoResposta = await resposta.text();
-            const resultado = JSON.parse(textoResposta);
+            const resultado = await resposta.json();
 
             if (resultado.status === "sucesso") {
                 msg.innerText = "✓ " + resultado.mensagem;
@@ -274,7 +236,7 @@
                 alert("Erro: " + resultado.mensagem);
             }
         } catch (error) {
-            console.error("Erro no fechamento:", error);
+            console.error(error);
             alert("Erro crítico de comunicação com o Google Apps Script.");
         } finally {
             btn.innerText = "Realizar Fechamento Mensal";
@@ -282,7 +244,8 @@
         }
     }
 
-    function efectuarLogout() {
+    // Corrigido erro de digitação no nome da função original para casar com o botão do topo
+    function efetuarLogout() {
         sessionStorage.clear();
         window.location.reload();
     }
