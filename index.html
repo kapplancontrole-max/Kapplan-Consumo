@@ -112,15 +112,24 @@
         btn.disabled = true;
 
         try {
+            // Mudança para evitar o bloqueio de CORS do preflight OPTIONS do Google
+            const dadosEnviar = new URLSearchParams();
+            dadosEnviar.append('vaga', 'ADMIN');
+            dadosEnviar.append('senha', senha);
+            dadosEnviar.append('acao', 'verificar_login');
+
             const resposta = await fetch(URL_GAS, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "verificar_login" })
+                body: dadosEnviar.toString()
             });
-            const resultado = await resposta.json();
+            
+            // Tratamento resiliente de JSON do Google Apps Script
+            const textoResposta = await resposta.text();
+            const resultado = JSON.parse(textoResposta);
 
             if (resultado.status === "sucesso") {
                 sessionStorage.setItem('adminLogado', 'true');
@@ -134,7 +143,7 @@
             }
         } catch (e) {
             console.error("Erro de conexão:", e);
-            erro.innerText = "Erro ao conectar ao servidor. Certifique-se de implantar o Script como Nova Versão.";
+            erro.innerText = "Erro ao conectar. Verifique se o login ADMIN está na planilha e se publicou como Nova Versão.";
             erro.style.display = 'block';
             btn.innerText = 'Entrar no Sistema';
             btn.disabled = false;
@@ -150,15 +159,22 @@
     async function carregarDadosGlobais() {
         const senha = sessionStorage.getItem('adminSenha');
         try {
+            const dadosEnviar = new URLSearchParams();
+            dadosEnviar.append('vaga', 'ADMIN');
+            dadosEnviar.append('senha', senha);
+            dadosEnviar.append('acao', 'buscar_todos_os_dados');
+
             const resposta = await fetch(URL_GAS, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "buscar_todos_os_dados" })
+                body: dadosEnviar.toString()
             });
-            const resultado = await resposta.json();
+            
+            const textoResposta = await resposta.text();
+            const resultado = JSON.parse(textoResposta);
 
             if (resultado.status === "sucesso") {
                 renderizarPainelSindico(resultado.dados);
@@ -198,8 +214,8 @@
         });
 
         let somaTotalCondominio = 0;
-        for (const vaga in ultimasLeiturasPorVaga) {
-            somaTotalCondominio += ultimasLeiturasPorVaga[vaga];
+        for (const vaga in ultimasLeituresPorVaga) {
+            somaTotalCondominio += ultimasLeituresPorVaga[vaga];
         }
         document.getElementById('total-geral').innerText = somaTotalCondominio.toFixed(2) + " kWh";
     }
@@ -220,15 +236,22 @@
         msg.style.display = "none";
 
         try {
+            const dadosEnviar = new URLSearchParams();
+            dadosEnviar.append('vaga', 'ADMIN');
+            dadosEnviar.append('senha', senha);
+            dadosEnviar.append('acao', 'realizar_fechamento_mes');
+
             const resposta = await fetch(URL_GAS, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "realizar_fechamento_mes" })
+                body: dadosEnviar.toString()
             });
-            const resultado = await resposta.json();
+            
+            const textoResposta = await resposta.text();
+            const resultado = JSON.parse(textoResposta);
 
             if (resultado.status === "sucesso") {
                 msg.innerText = "✓ " + resultado.mensagem;
