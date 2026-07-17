@@ -1,505 +1,505 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrador - AbrangeBox</title>
-    <style>
-        :root { 
-            --bg: #f1f5f9; 
-            --card: #ffffff; 
-            --primary: #10b981; 
-            --text: #1e293b; 
-            --danger: #ef4444; 
-            --accent: #3b82f6; 
-        }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg); 
-            padding: 40px; 
-            display: flex; 
-            justify-content: center; 
-            align-items: flex-start; 
-            min-height: 100vh; 
-            color: var(--text); 
-        }
-        .container { width: 100%; max-width: 900px; display: none; position: relative; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .card { background: var(--card); padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; }
-        .card h3 { font-size: 14px; color: #64748b; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .card p { font-size: 24px; font-weight: 700; color: var(--text); }
-        .btn { display: inline-block; padding: 10px 20px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; }
-        .btn:hover { background-color: #059669; }
-        .btn-accent { background: var(--accent); }
-        .btn-accent:hover { background-color: #2563eb; }
-        .btn-success { background: #10b981; }
-        .btn-success:hover { background-color: #059669; }
-        .btn-logout { position: absolute; top: 0; right: 0; background-color: var(--danger); }
-        .btn-logout:hover { background-color: #dc2626; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 8px; overflow: hidden; }
-        th, td { padding: 12px 15px; border-bottom: 1px solid #e2e8f0; text-align: left; }
-        th { background-color: #f8fafc; color: #64748b; font-size: 13px; font-weight: 600; }
-        .txt-sucesso { color: var(--primary); font-weight: 600; margin-top: 10px; font-size: 14px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrador - AbrangeBox</title>
+    <style>
+        :root { 
+            --bg: #f1f5f9; 
+            --card: #ffffff; 
+            --primary: #10b981; 
+            --text: #1e293b; 
+            --danger: #ef4444; 
+            --accent: #3b82f6; 
+        }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg); 
+            padding: 40px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            min-height: 100vh; 
+            color: var(--text); 
+        }
+        .container { width: 100%; max-width: 900px; display: none; position: relative; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: var(--card); padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; }
+        .card h3 { font-size: 14px; color: #64748b; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card p { font-size: 24px; font-weight: 700; color: var(--text); }
+        .btn { display: inline-block; padding: 10px 20px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background-color: #059669; }
+        .btn-accent { background: var(--accent); }
+        .btn-accent:hover { background-color: #2563eb; }
+        .btn-success { background: #10b981; }
+        .btn-success:hover { background-color: #059669; }
+        .btn-logout { position: absolute; top: 0; right: 0; background-color: var(--danger); }
+        .btn-logout:hover { background-color: #dc2626; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px 15px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        th { background-color: #f8fafc; color: #64748b; font-size: 13px; font-weight: 600; }
+        .txt-sucesso { color: var(--primary); font-weight: 600; margin-top: 10px; font-size: 14px; }
 
-        /* Estilo da Caixa de Login do Admin */
-        .login-box { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 380px; border: 1px solid #e2e8f0; text-align: center; margin-top: 10vh; }
-        .login-box input { width: 100%; padding: 12px; margin-top: 8px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; background-color: #f8fafc; }
-        .login-box label { font-weight: 600; display: block; text-align: left; color: #1e293b; font-size: 14px; }
+        /* Estilo da Caixa de Login do Admin */
+        .login-box { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 380px; border: 1px solid #e2e8f0; text-align: center; margin-top: 10vh; }
+        .login-box input { width: 100%; padding: 12px; margin-top: 8px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; background-color: #f8fafc; }
+        .login-box label { font-weight: 600; display: block; text-align: left; color: #1e293b; font-size: 14px; }
 
-        /* Estilos de Impressão Otimizados para PDF */
-        @media print {
-            body { background: white; padding: 0; color: #000; }
-            .container { display: block !important; max-width: 100%; }
-            .btn, .btn-logout, .login-box, .stats-grid, #tabela-geral, #btn-fechamento, #btn-pdf, .card:not(.printable-card) { display: none !important; }
-            .printable-card { border: none !important; box-shadow: none !important; padding: 0 !important; }
-            table { border: 1px solid #cbd5e1; page-break-inside: avoid; }
-            th { background-color: #f1f5f9 !important; color: #000 !important; border-bottom: 2px solid #cbd5e1; }
-            td { border-bottom: 1px solid #cbd5e1; }
-        }
-    </style>
+        /* Estilos de Impressão Otimizados para PDF */
+        @media print {
+            body { background: white; padding: 0; color: #000; }
+            .container { display: block !important; max-width: 100%; }
+            .btn, .btn-logout, .login-box, .stats-grid, #tabela-geral, #btn-fechamento, #btn-pdf, .card:not(.printable-card) { display: none !important; }
+            .printable-card { border: none !important; box-shadow: none !important; padding: 0 !important; }
+            table { border: 1px solid #cbd5e1; page-break-inside: avoid; }
+            th { background-color: #f1f5f9 !important; color: #000 !important; border-bottom: 2px solid #cbd5e1; }
+            td { border-bottom: 1px solid #cbd5e1; }
+        }
+    </style>
 </head>
 <body>
 
 <div class="login-box" id="caixa-login">
-    <div style="margin-bottom: 20px;"><img src="logo.png" alt="Logo" style="max-width: 220px; height: auto;"></div>
-    <h3>Painel Consumo Geral</h3>
-    <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">Acesso restrito ao administrador</p>
-    <form onsubmit="autenticarAdmin(event)">
-        <label>Senha Master:</label>
-        <input type="password" id="senha-admin" placeholder="Digite a senha ADM" required>
-        <div id="erro-login" style="color: var(--danger); font-size: 13px; margin-bottom: 15px; display: none; font-weight: 600;"></div>
-        <button type="submit" class="btn" id="btn-entrar" style="width: 100%; margin-top: 0;">Entrar no Sistema</button>
-    </form>
+    <div style="margin-bottom: 20px;"><img src="logo.png" alt="Logo" style="max-width: 220px; height: auto;"></div>
+    <h3>Painel do Síndico</h3>
+    <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">Acesso restrito ao administrador</p>
+    <form onsubmit="autenticarAdmin(event)">
+        <label>Senha Master:</label>
+        <input type="password" id="senha-admin" placeholder="Digite a senha ADM" required>
+        <div id="erro-login" style="color: var(--danger); font-size: 13px; margin-bottom: 15px; display: none; font-weight: 600;"></div>
+        <button type="submit" class="btn" id="btn-entrar" style="width: 100%; margin-top: 0;">Entrar no Sistema</button>
+    </form>
 </div>
 
 <div class="container" id="conteudo-dashboard">
-    <button class="btn btn-logout" onclick="efetuarLogout()">Sair do Painel</button>
-    <div style="text-align: center; margin-bottom: 20px;">
-        <img src="logo.png" alt="Logo AbrangeBox" style="max-width: 550px; height: auto;">
-    </div>
-    <h1>Dashboard Admin: <span style="color: #64748b;">Consumo Geral do Condomínio</span></h1>
-    
-    <div class="stats-grid">
-        <div class="card"><h3>Consumo Geral Acumulado</h3><p id="total-geral">Buscando...</p></div>
-        <div class="card"><h3>Total de Leituras Gravadas</h3><p id="total-registros">0</p></div>
-    </div>
+    <button class="btn btn-logout" onclick="efetuarLogout()">Sair do Painel</button>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="logo.png" alt="Logo AbrangeBox" style="max-width: 550px; height: auto;">
+    </div>
+    <h1>Dashboard Admin: <span style="color: #64748b;">Consumo Geral do Condomínio</span></h1>
+    
+    <div class="stats-grid">
+        <div class="card"><h3>Consumo Geral Acumulado</h3><p id="total-geral">Buscando...</p></div>
+        <div class="card"><h3>Total de Leituras Gravadas</h3><p id="total-registros">0</p></div>
+    </div>
 
-    <div class="card printable-card" style="border-left: 5px solid var(--accent);">
-        <h3>Fechamento de Competência / Relatório Mensal</h3>
-        <p style="font-size: 14px; color: #64748b; font-weight: normal; margin-top: -5px;">
-            Clique no botão abaixo para obter o cálculo mensal.
-        </p>
-        <div style="gap: 10px; display: flex; flex-wrap: wrap;">
-            <button class="btn btn-accent" id="btn-fechamento" onclick="processarFechamentoMensal()">Realizar Fechamento Mensal</button>
-            <button class="btn btn-success" id="btn-pdf" onclick="gerarPDFRelatorio()" style="display: none;">Imprimir / Salvar PDF</button>
-        </div>
-        <div id="msg-fechamento" class="txt-sucesso" style="display: none;"></div>
-        
-        <table id="tabela-fechamento" style="display: none; margin-top: 20px;">
-            <thead>
-                <tr>
-                    <th>ID Ciclo</th>
-                    <th>Vaga</th>
-                    <th>Leitura Anterior (kWh)</th>
-                    <th>Leitura Atual (kWh)</th>
-                    <th>Consumo Período (kWh)</th>
-                </tr>
-            </thead>
-            <tbody id="corpo-fechamento"></tbody>
-        </table>
-    </div>
+    <div class="card printable-card" style="border-left: 5px solid var(--accent);">
+        <h3>Fechamento de Competência / Relatório Mensal</h3>
+        <p style="font-size: 14px; color: #64748b; font-weight: normal; margin-top: -5px;">
+            Clique no botão abaixo para obter o cálculo mensal.
+        </p>
+        <div style="gap: 10px; display: flex; flex-wrap: wrap;">
+            <button class="btn btn-accent" id="btn-fechamento" onclick="processarFechamentoMensal()">Realizar Fechamento Mensal</button>
+            <button class="btn btn-success" id="btn-pdf" onclick="gerarPDFRelatorio()" style="display: none;">Imprimir / Salvar PDF</button>
+        </div>
+        <div id="msg-fechamento" class="txt-sucesso" style="display: none;"></div>
+        
+        <table id="tabela-fechamento" style="display: none; margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>ID Ciclo</th>
+                    <th>Vaga</th>
+                    <th>Leitura Anterior (kWh)</th>
+                    <th>Leitura Atual (kWh)</th>
+                    <th>Consumo Período (kWh)</th>
+                </tr>
+            </thead>
+            <tbody id="corpo-fechamento"></tbody>
+        </table>
+    </div>
 
-    <div class="card">
-        <h3>Histórico de Leituras Globais (Tempo Real)</h3>
-        <table id="tabela-geral">
-            <thead><tr><th>Data/Hora</th><th>Vaga</th><th>Leitura Atual</th></tr></thead>
-            <tbody id="corpo-tabela"></tbody>
-        </table>
-        <div style="gap: 10px; display: flex;">
-            <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRLD2uF87sgX7w16nG1vacYkFTG4RalaD8iV93LCSSj-pfk05TQO7t1OflNS_IBqL7dp1gP6tUF4-kv/pub?gid=0&single=true&output=csv" target="_blank" class="btn" style="background-color: #64748b;">Abrir Planilha Original</a>
-        </div>
-    </div>
+    <div class="card">
+        <h3>Histórico de Leituras Globais (Tempo Real)</h3>
+        <table id="tabela-geral">
+            <thead><tr><th>Data/Hora</th><th>Vaga</th><th>Leitura Atual</th></tr></thead>
+            <tbody id="corpo-tabela"></tbody>
+        </table>
+        <div style="gap: 10px; display: flex;">
+            <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRLD2uF87sgX7w16nG1vacYkFTG4RalaD8iV93LCSSj-pfk05TQO7t1OflNS_IBqL7dp1gP6tUF4-kv/pub?gid=0&single=true&output=csv" target="_blank" class="btn" style="background-color: #64748b;">Abrir Planilha Original</a>
+        </div>
+    </div>
 </div>
 
 <script>
-    const URL_GAS = 'https://script.google.com/macros/s/AKfycbw4WG8kjvhsYHwn0lKd59q8kMonyKltpFw5AmvCgWC2OAFvST7RKq2M9OkycFdw2LmP/exec';
-    let dadosFechamentoAtuais = []; // Armazena dados do fechamento para o PDF
+    const URL_GAS = 'https://script.google.com/macros/s/AKfycbw4WG8kjvhsYHwn0lKd59q8kMonyKltpFw5AmvCgWC2OAFvST7RKq2M9OkycFdw2LmP/exec';
+    let dadosFechamentoAtuais = []; // Armazena dados do fechamento para o PDF
 
-    window.onload = function() {
-        if (sessionStorage.getItem('adminLogado') === 'true') {
-            exibirDashboard();
-        }
-    };
+    window.onload = function() {
+        if (sessionStorage.getItem('adminLogado') === 'true') {
+            exibirDashboard();
+        }
+    };
 
-    async function autenticarAdmin(event) {
-        event.preventDefault();
-        const senha = document.getElementById('senha-admin').value;
-        const erro = document.getElementById('erro-login');
-        const btn = document.getElementById('btn-entrar');
+    async function autenticarAdmin(event) {
+        event.preventDefault();
+        const senha = document.getElementById('senha-admin').value;
+        const erro = document.getElementById('erro-login');
+        const btn = document.getElementById('btn-entrar');
 
-        erro.style.display = 'none';
-        btn.innerText = 'Verificando...';
-        btn.disabled = true;
+        erro.style.display = 'none';
+        btn.innerText = 'Verificando...';
+        btn.disabled = true;
 
-        try {
-            const resposta = await fetch(URL_GAS, {
-                method: 'POST',
-                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "verificar_login" })
-            });
-            const resultado = await resposta.json();
+        try {
+            const resposta = await fetch(URL_GAS, {
+                method: 'POST',
+                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "verificar_login" })
+            });
+            const resultado = await resposta.json();
 
-            if (resultado.status === "sucesso") {
-                sessionStorage.setItem('adminLogado', 'true');
-                sessionStorage.setItem('adminSenha', senha);
-                exibirDashboard();
-            } else {
-                erro.innerText = resultado.mensagem || "Senha Master incorreta!";
-                erro.style.display = 'block';
-                btn.innerText = 'Entrar no Sistema';
-                btn.disabled = false;
-            }
-        } catch (e) {
-            console.error(e);
-            erro.innerText = "Erro ao conectar ao servidor.";
-            erro.style.display = 'block';
-            btn.innerText = 'Entrar no Sistema';
-            btn.disabled = false;
-        }
-    }
+            if (resultado.status === "sucesso") {
+                sessionStorage.setItem('adminLogado', 'true');
+                sessionStorage.setItem('adminSenha', senha);
+                exibirDashboard();
+            } else {
+                erro.innerText = resultado.mensagem || "Senha Master incorreta!";
+                erro.style.display = 'block';
+                btn.innerText = 'Entrar no Sistema';
+                btn.disabled = false;
+            }
+        } catch (e) {
+            console.error(e);
+            erro.innerText = "Erro ao conectar ao servidor.";
+            erro.style.display = 'block';
+            btn.innerText = 'Entrar no Sistema';
+            btn.disabled = false;
+        }
+    }
 
-    function exibirDashboard() {
-        document.getElementById('caixa-login').style.display = 'none';
-        document.getElementById('conteudo-dashboard').style.display = 'block';
-        carregarDadosGlobais();
-    }
+    function exibirDashboard() {
+        document.getElementById('caixa-login').style.display = 'none';
+        document.getElementById('conteudo-dashboard').style.display = 'block';
+        carregarDadosGlobais();
+    }
 
-    async function carregarDadosGlobais() {
-        const senha = sessionStorage.getItem('adminSenha');
-        try {
-            const resposta = await fetch(URL_GAS, {
-                method: 'POST',
-                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "buscar_todos_os_dados" })
-            });
-            const resultado = await resposta.json();
+    async function carregarDadosGlobais() {
+        const senha = sessionStorage.getItem('adminSenha');
+        try {
+            const resposta = await fetch(URL_GAS, {
+                method: 'POST',
+                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "buscar_todos_os_dados" })
+            });
+            const resultado = await resposta.json();
 
-            if (resultado.status === "sucesso") {
-                renderizarPainelSindico(resultado.dados);
-            }
-        } catch (error) {
-            console.error(error);
-            document.getElementById('corpo-tabela').innerHTML = "<tr><td colspan='3' style='color: var(--danger); text-align: center;'>Erro ao atualizar tabela.</td></tr>";
-        }
-    }
+            if (resultado.status === "sucesso") {
+                renderizarPainelSindico(resultado.dados);
+            }
+        } catch (error) {
+            console.error(error);
+            document.getElementById('corpo-tabela').innerHTML = "<tr><td colspan='3' style='color: var(--danger); text-align: center;'>Erro ao atualizar tabela.</td></tr>";
+        }
+    }
 
-    function renderizarPainelSindico(dados) {
-        const corpo = document.getElementById('corpo-tabela');
-        corpo.innerHTML = "";
-        document.getElementById('total-registros').innerText = dados.length;
+    function renderizarPainelSindico(dados) {
+        const corpo = document.getElementById('corpo-tabela');
+        corpo.innerHTML = "";
+        document.getElementById('total-registros').innerText = dados.length;
 
-        if (dados.length === 0) {
-            document.getElementById('total-geral').innerText = "0.00 kWh";
-            corpo.innerHTML = "<tr><td colspan='3' style='text-align: center;'>Nenhum dado encontrado.</td></tr>";
-            return;
-        }
+        if (dados.length === 0) {
+            document.getElementById('total-geral').innerText = "0.00 kWh";
+            corpo.innerHTML = "<tr><td colspan='3' style='text-align: center;'>Nenhum dado encontrado.</td></tr>";
+            return;
+        }
 
-        const ultimasLeiturasPorVaga = {};
-        const dadosInvertidos = [...dados].reverse();
+        const ultimasLeiturasPorVaga = {};
+        const dadosInvertidos = [...dados].reverse();
 
-        dadosInvertidos.forEach(item => {
-            var vagaKey = item.vaga.toUpperCase();
-            if (!(vagaKey in ultimasLeiturasPorVaga)) {
-                ultimasLeiturasPorVaga[vagaKey] = item.consumo;
-            }
-            corpo.innerHTML += `<tr>
-                <td>${new Date(item.data).toLocaleString('pt-BR')}</td>
-                <td><strong>${item.vaga.toUpperCase()}</strong></td>
-                <td>${item.consumo.toFixed(2)} kWh</td>
-            </tr>`;
-        });
+        dadosInvertidos.forEach(item => {
+            var vagaKey = item.vaga.toUpperCase();
+            if (!(vagaKey in ultimasLeiturasPorVaga)) {
+                ultimasLeiturasPorVaga[vagaKey] = item.consumo;
+            }
+            corpo.innerHTML += `<tr>
+                <td>${new Date(item.data).toLocaleString('pt-BR')}</td>
+                <td><strong>${item.vaga.toUpperCase()}</strong></td>
+                <td>${item.consumo.toFixed(2)} kWh</td>
+            </tr>`;
+        });
 
-        let somaTotalCondominio = 0;
-        for (const vaga in ultimasLeiturasPorVaga) {
-            somaTotalCondominio += ultimasLeiturasPorVaga[vaga];
-        }
-        document.getElementById('total-geral').innerText = somaTotalCondominio.toFixed(2) + " kWh";
-    }
+        let somaTotalCondominio = 0;
+        for (const vaga in ultimasLeiturasPorVaga) {
+            somaTotalCondominio += ultimasLeiturasPorVaga[vaga];
+        }
+        document.getElementById('total-geral').innerText = somaTotalCondominio.toFixed(2) + " kWh";
+    }
 
-    async function processarFechamentoMensal() {
-        const btn = document.getElementById('btn-fechamento');
-        const btnPdf = document.getElementById('btn-pdf');
-        const msg = document.getElementById('msg-fechamento');
-        const tabela = document.getElementById('tabela-fechamento');
-        const corpoFechamento = document.getElementById('corpo-fechamento');
-        const senha = sessionStorage.getItem('adminSenha');
+    async function processarFechamentoMensal() {
+        const btn = document.getElementById('btn-fechamento');
+        const btnPdf = document.getElementById('btn-pdf');
+        const msg = document.getElementById('msg-fechamento');
+        const tabela = document.getElementById('tabela-fechamento');
+        const corpoFechamento = document.getElementById('corpo-fechamento');
+        const senha = sessionStorage.getItem('adminSenha');
 
-        if (!confirm("Tem certeza que deseja processar o faturamento agora? Esta ação gravará dados permanentes na planilha.")) {
-            return;
-        }
+        if (!confirm("Tem certeza que deseja processar o faturamento agora? Esta ação gravará dados permanentes na planilha.")) {
+            return;
+        }
 
-        btn.innerText = "Processando Fechamento...";
-        btn.disabled = true;
-        btnPdf.style.display = "none";
-        msg.style.display = "none";
+        btn.innerText = "Processando Fechamento...";
+        btn.disabled = true;
+        btnPdf.style.display = "none";
+        msg.style.display = "none";
 
-        try {
-            const resposta = await fetch(URL_GAS, {
-                method: 'POST',
-                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "realizar_fechamento_mes" })
-            });
-            const resultado = await resposta.json();
+        try {
+            const resposta = await fetch(URL_GAS, {
+                method: 'POST',
+                body: JSON.stringify({ vaga: "ADMIN", senha: senha, acao: "realizar_fechamento_mes" })
+            });
+            const resultado = await resposta.json();
 
-            if (resultado.status === "sucesso") {
-                dadosFechamentoAtuais = resultado.dados;
-                msg.innerText = "✓ " + resultado.mensagem;
-                msg.style.display = "block";
-                
-                corpoFechamento.innerHTML = "";
-                resultado.dados.forEach(item => {
-                    corpoFechamento.innerHTML += `<tr>
-                        <td><strong>#${item.idFechamento}</strong></td>
-                        <td><strong>${item.vaga}</strong></td>
-                        <td>${item.leituraAnterior.toFixed(2)}</td>
-                        <td>${item.leituraAtual.toFixed(2)}</td>
-                        <td style="color: var(--accent); font-weight: bold;">${item.consumoPeriodo.toFixed(2)} kWh</td>
-                    </tr>`;
-                });
-                
-                tabela.style.display = "table";
-                btnPdf.style.display = "inline-block";
-                carregarDadosGlobais();
-            } else {
-                alert("Erro: " + resultado.mensagem);
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Erro crítico de comunicação com o Google Apps Script.");
-        } finally {
-            btn.innerText = "Realizar Fechamento Mensal";
-            btn.disabled = false;
-        }
-    }
+            if (resultado.status === "sucesso") {
+                dadosFechamentoAtuais = resultado.dados;
+                msg.innerText = "✓ " + resultado.mensagem;
+                msg.style.display = "block";
+                
+                corpoFechamento.innerHTML = "";
+                resultado.dados.forEach(item => {
+                    corpoFechamento.innerHTML += `<tr>
+                        <td><strong>#${item.idFechamento}</strong></td>
+                        <td><strong>${item.vaga}</strong></td>
+                        <td>${item.leituraAnterior.toFixed(2)}</td>
+                        <td>${item.leituraAtual.toFixed(2)}</td>
+                        <td style="color: var(--accent); font-weight: bold;">${item.consumoPeriodo.toFixed(2)} kWh</td>
+                    </tr>`;
+                });
+                
+                tabela.style.display = "table";
+                btnPdf.style.display = "inline-block";
+                carregarDadosGlobais();
+            } else {
+                alert("Erro: " + resultado.mensagem);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Erro crítico de comunicação com o Google Apps Script.");
+        } finally {
+            btn.innerText = "Realizar Fechamento Mensal";
+            btn.disabled = false;
+        }
+    }
 
-    // Função que abre uma nova janela otimizada, estilizada e limpa para impressão como PDF do relatório
-    function gerarPDFRelatorio() {
-        if (dadosFechamentoAtuais.length === 0) {
-            alert("Não há dados de fechamento disponíveis para gerar o PDF.");
-            return;
-        }
+    // Função que abre uma nova janela otimizada, estilizada e limpa para impressão como PDF do relatório
+    function gerarPDFRelatorio() {
+        if (dadosFechamentoAtuais.length === 0) {
+            alert("Não há dados de fechamento disponíveis para gerar o PDF.");
+            return;
+        }
 
-        const dataAtual = new Date().toLocaleDateString('pt-BR');
-        const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        const dataAtual = new Date().toLocaleDateString('pt-BR');
+        const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-        // Calcula total do período
-        let totalConsumoPeriodo = 0;
-        let linhasTabelaHtml = "";
-        
-        dadosFechamentoAtuais.forEach(item => {
-            totalConsumoPeriodo += item.consumoPeriodo;
-            linhasTabelaHtml += `
-                <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 12px 15px; font-weight: bold; color: #334155;">#${item.idFechamento}</td>
-                    <td style="padding: 12px 15px; font-weight: bold; color: #0f172a;">${item.vaga}</td>
-                    <td style="padding: 12px 15px; text-align: right; color: #475569;">${item.leituraAnterior.toFixed(2)} kWh</td>
-                    <td style="padding: 12px 15px; text-align: right; color: #475569;">${item.leituraAtual.toFixed(2)} kWh</td>
-                    <td style="padding: 12px 15px; text-align: right; font-weight: bold; color: #2563eb;">${item.consumoPeriodo.toFixed(2)} kWh</td>
-                </tr>
-            `;
-        });
+        // Calcula total do período
+        let totalConsumoPeriodo = 0;
+        let linhasTabelaHtml = "";
+        
+        dadosFechamentoAtuais.forEach(item => {
+            totalConsumoPeriodo += item.consumoPeriodo;
+            linhasTabelaHtml += `
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 12px 15px; font-weight: bold; color: #334155;">#${item.idFechamento}</td>
+                    <td style="padding: 12px 15px; font-weight: bold; color: #0f172a;">${item.vaga}</td>
+                    <td style="padding: 12px 15px; text-align: right; color: #475569;">${item.leituraAnterior.toFixed(2)} kWh</td>
+                    <td style="padding: 12px 15px; text-align: right; color: #475569;">${item.leituraAtual.toFixed(2)} kWh</td>
+                    <td style="padding: 12px 15px; text-align: right; font-weight: bold; color: #2563eb;">${item.consumoPeriodo.toFixed(2)} kWh</td>
+                </tr>
+            `;
+        });
 
-        // Abre uma nova aba com o layout impecável do relatório
-        const janelaImpressao = window.open('', '_blank');
-        janelaImpressao.document.write(`
-            <!DOCTYPE html>
-            <html lang="pt-BR">
-            <head>
-                <meta charset="UTF-8">
-                <title>Relatório Mensal de Fechamento - AbrangeBox</title>
-                <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-                    body {
-                        font-family: 'Inter', sans-serif;
-                        color: #1e293b;
-                        background: #fff;
-                        margin: 0;
-                        padding: 40px;
-                        -webkit-print-color-adjust: exact;
-                    }
-                    .header {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        border-bottom: 2px solid #e2e8f0;
-                        padding-bottom: 20px;
-                        margin-bottom: 30px;
-                    }
-                    .logo-container img {
-                        max-width: 180px;
-                        height: auto;
-                    }
-                    .report-title {
-                        text-align: right;
-                    }
-                    .report-title h1 {
-                        font-size: 20px;
-                        color: #0f172a;
-                        margin: 0;
-                    }
-                    .report-title p {
-                        font-size: 13px;
-                        color: #64748b;
-                        margin: 5px 0 0 0;
-                    }
-                    .metadata-grid {
-                        display: grid;
-                        grid-template-columns: repeat(2, 1fr);
-                        gap: 20px;
-                        margin-bottom: 30px;
-                    }
-                    .meta-card {
-                        background-color: #f8fafc;
-                        border: 1px solid #e2e8f0;
-                        border-radius: 8px;
-                        padding: 15px;
-                    }
-                    .meta-card h3 {
-                        font-size: 11px;
-                        text-transform: uppercase;
-                        color: #64748b;
-                        margin: 0 0 5px 0;
-                        letter-spacing: 0.5px;
-                    }
-                    .meta-card p {
-                        font-size: 16px;
-                        font-weight: 700;
-                        margin: 0;
-                        color: #0f172a;
-                    }
-                    table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-top: 10px;
-                        margin-bottom: 30px;
-                    }
-                    th {
-                        background-color: #f1f5f9;
-                        color: #475569;
-                        font-weight: 600;
-                        font-size: 12px;
-                        text-transform: uppercase;
-                        padding: 12px 15px;
-                        border-bottom: 2px solid #cbd5e1;
-                        text-align: left;
-                    }
-                    th.num, td.num {
-                        text-align: right;
-                    }
-                    .total-section {
-                        display: flex;
-                        justify-content: flex-end;
-                        margin-top: 20px;
-                        border-top: 2px solid #e2e8f0;
-                        padding-top: 15px;
-                    }
-                    .total-box {
-                        text-align: right;
-                        padding: 10px 20px;
-                        background: #eff6ff;
-                        border-radius: 8px;
-                        border: 1px solid #bfdbfe;
-                    }
-                    .total-box span {
-                        font-size: 12px;
-                        color: #1e40af;
-                        text-transform: uppercase;
-                        font-weight: 600;
-                        display: block;
-                    }
-                    .total-box strong {
-                        font-size: 22px;
-                        color: #1d4ed8;
-                        font-weight: 700;
-                    }
-                    .footer {
-                        margin-top: 60px;
-                        text-align: center;
-                        font-size: 11px;
-                        color: #94a3b8;
-                        border-top: 1px solid #e2e8f0;
-                        padding-top: 20px;
-                    }
-                    @media print {
-                        body { padding: 20px; }
-                        .footer { position: fixed; bottom: 0; left: 0; right: 0; }
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="header">
-                    <div class="logo-container">
-                        <img src="logo.png" alt="AbrangeBox" onerror="this.style.display='none'">
-                        <h2 style="margin: 5px 0 0 0; color: #10b981; font-size: 22px; font-weight: bold; letter-spacing: -0.5px;">AbrangeBox</h2>
-                    </div>
-                    <div class="report-title">
-                        <h1>Demonstrativo de Consumo Mensal</h1>
-                        <p>Condomínio de Vagas Elétricas</p>
-                    </div>
-                </div>
+        // Abre uma nova aba com o layout impecável do relatório
+        const janelaImpressao = window.open('', '_blank');
+        janelaImpressao.document.write(`
+            <!DOCTYPE html>
+            <html lang="pt-BR">
+            <head>
+                <meta charset="UTF-8">
+                <title>Relatório Mensal de Fechamento - AbrangeBox</title>
+                <style>
+                    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+                    body {
+                        font-family: 'Inter', sans-serif;
+                        color: #1e293b;
+                        background: #fff;
+                        margin: 0;
+                        padding: 40px;
+                        -webkit-print-color-adjust: exact;
+                    }
+                    .header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        border-bottom: 2px solid #e2e8f0;
+                        padding-bottom: 20px;
+                        margin-bottom: 30px;
+                    }
+                    .logo-container img {
+                        max-width: 180px;
+                        height: auto;
+                    }
+                    .report-title {
+                        text-align: right;
+                    }
+                    .report-title h1 {
+                        font-size: 20px;
+                        color: #0f172a;
+                        margin: 0;
+                    }
+                    .report-title p {
+                        font-size: 13px;
+                        color: #64748b;
+                        margin: 5px 0 0 0;
+                    }
+                    .metadata-grid {
+                        display: grid;
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 20px;
+                        margin-bottom: 30px;
+                    }
+                    .meta-card {
+                        background-color: #f8fafc;
+                        border: 1px solid #e2e8f0;
+                        border-radius: 8px;
+                        padding: 15px;
+                    }
+                    .meta-card h3 {
+                        font-size: 11px;
+                        text-transform: uppercase;
+                        color: #64748b;
+                        margin: 0 0 5px 0;
+                        letter-spacing: 0.5px;
+                    }
+                    .meta-card p {
+                        font-size: 16px;
+                        font-weight: 700;
+                        margin: 0;
+                        color: #0f172a;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 10px;
+                        margin-bottom: 30px;
+                    }
+                    th {
+                        background-color: #f1f5f9;
+                        color: #475569;
+                        font-weight: 600;
+                        font-size: 12px;
+                        text-transform: uppercase;
+                        padding: 12px 15px;
+                        border-bottom: 2px solid #cbd5e1;
+                        text-align: left;
+                    }
+                    th.num, td.num {
+                        text-align: right;
+                    }
+                    .total-section {
+                        display: flex;
+                        justify-content: flex-end;
+                        margin-top: 20px;
+                        border-top: 2px solid #e2e8f0;
+                        padding-top: 15px;
+                    }
+                    .total-box {
+                        text-align: right;
+                        padding: 10px 20px;
+                        background: #eff6ff;
+                        border-radius: 8px;
+                        border: 1px solid #bfdbfe;
+                    }
+                    .total-box span {
+                        font-size: 12px;
+                        color: #1e40af;
+                        text-transform: uppercase;
+                        font-weight: 600;
+                        display: block;
+                    }
+                    .total-box strong {
+                        font-size: 22px;
+                        color: #1d4ed8;
+                        font-weight: 700;
+                    }
+                    .footer {
+                        margin-top: 60px;
+                        text-align: center;
+                        font-size: 11px;
+                        color: #94a3b8;
+                        border-top: 1px solid #e2e8f0;
+                        padding-top: 20px;
+                    }
+                    @media print {
+                        body { padding: 20px; }
+                        .footer { position: fixed; bottom: 0; left: 0; right: 0; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <div class="logo-container">
+                        <img src="logo.png" alt="AbrangeBox" onerror="this.style.display='none'">
+                        <h2 style="margin: 5px 0 0 0; color: #10b981; font-size: 22px; font-weight: bold; letter-spacing: -0.5px;">AbrangeBox</h2>
+                    </div>
+                    <div class="report-title">
+                        <h1>Demonstrativo de Consumo Mensal</h1>
+                        <p>Condomínio de Vagas Elétricas</p>
+                    </div>
+                </div>
 
-                <div class="metadata-grid">
-                    <div class="meta-card">
-                        <h3>Período / Emissão</h3>
-                        <p>${dataAtual} às ${horaAtual}</p>
-                    </div>
-                    <div class="meta-card">
-                        <h3>Status do Fechamento</h3>
-                        <p style="color: #10b981;">✓ Processado com Sucesso</p>
-                    </div>
-                </div>
+                <div class="metadata-grid">
+                    <div class="meta-card">
+                        <h3>Período / Emissão</h3>
+                        <p>${dataAtual} às ${horaAtual}</p>
+                    </div>
+                    <div class="meta-card">
+                        <h3>Status do Fechamento</h3>
+                        <p style="color: #10b981;">✓ Processado com Sucesso</p>
+                    </div>
+                </div>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID Ciclo</th>
-                            <th>Vaga</th>
-                            <th class="num">Leitura Anterior</th>
-                            <th class="num">Leitura Atual</th>
-                            <th class="num">Consumo Período</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${linhasTabelaHtml}
-                    </tbody>
-                </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Ciclo</th>
+                            <th>Vaga</th>
+                            <th class="num">Leitura Anterior</th>
+                            <th class="num">Leitura Atual</th>
+                            <th class="num">Consumo Período</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${linhasTabelaHtml}
+                    </tbody>
+                </table>
 
-                <div class="total-section">
-                    <div class="total-box">
-                        <span>Consumo Total do Período</span>
-                        <strong>${totalConsumoPeriodo.toFixed(2)} kWh</strong>
-                    </div>
-                </div>
+                <div class="total-section">
+                    <div class="total-box">
+                        <span>Consumo Total do Período</span>
+                        <strong>${totalConsumoPeriodo.toFixed(2)} kWh</strong>
+                    </div>
+                </div>
 
-                <div class="footer">
-                    Relatório gerado automaticamente pelo Sistema Administrativo AbrangeBox em ${dataAtual}.<br>
-                    Todos os direitos reservados.
-                </div>
+                <div class="footer">
+                    Relatório gerado automaticamente pelo Sistema Administrativo AbrangeBox em ${dataAtual}.<br>
+                    Todos os direitos reservados.
+                </div>
 
-                <script>
-                    window.onload = function() {
-                        setTimeout(() => {
-                            window.print();
-                        }, 500);
-                    };
-                <\/script>
-            </body>
-            </html>
-        `);
-        janelaImpressao.document.close();
-    }
+                <script>
+                    window.onload = function() {
+                        setTimeout(() => {
+                            window.print();
+                        }, 500);
+                    };
+                <\/script>
+            </body>
+            </html>
+        `);
+        janelaImpressao.document.close();
+    }
 
-    function efetuarLogout() {
-        sessionStorage.clear();
-        window.location.reload();
-    }
+    function efetuarLogout() {
+        sessionStorage.clear();
+        window.location.reload();
+    }
 </script>
 </body>
 </html>
