@@ -280,6 +280,7 @@
     }
 
     // Função que abre uma nova janela otimizada, estilizada e limpa para impressão como PDF do relatório
+   // Função que abre uma nova janela otimizada, estilizada e limpa para impressão como PDF do relatório
     function gerarPDFRelatorio() {
         if (dadosFechamentoAtuais.length === 0) {
             alert("Não há dados de fechamento disponíveis para gerar o PDF.");
@@ -297,7 +298,7 @@
             totalConsumoPeriodo += item.consumoPeriodo;
             linhasTabelaHtml += `
                 <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 12px 15px; font-weight: bold; color: #334155;">#${item.idFechamento}</td>
+                    <td style="padding: 12px 15px; font-weight: bold; color: #334155;">${dataAtual}</td>
                     <td style="padding: 12px 15px; font-weight: bold; color: #0f172a;">${item.vaga}</td>
                     <td style="padding: 12px 15px; text-align: right; color: #475569;">${item.leituraAnterior.toFixed(2)} kWh</td>
                     <td style="padding: 12px 15px; text-align: right; color: #475569;">${item.leituraAtual.toFixed(2)} kWh</td>
@@ -308,7 +309,7 @@
 
         // Abre uma nova aba com o layout impecável do relatório
         const janelaImpressao = window.open('', '_blank');
-        janelaImpressao.document.write(`
+        janestaImpressao.document.write(`
             <!DOCTYPE html>
             <html lang="pt-BR">
             <head>
@@ -459,7 +460,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>ID Ciclo</th>
+                            <th>Data Fechamento</th>
                             <th>Vaga</th>
                             <th class="num">Leitura Anterior</th>
                             <th class="num">Leitura Atual</th>
@@ -495,7 +496,6 @@
         `);
         janelaImpressao.document.close();
     }
-
     function efetuarLogout() {
         sessionStorage.clear();
         window.location.reload();
