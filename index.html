@@ -65,8 +65,8 @@
     <h3>Painel do Síndico</h3>
     <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">Acesso restrito ao administrador</p>
     <form onsubmit="autenticarAdmin(event)">
-        <label>Senha Master:</label>
-        <input type="password" id="senha-admin" placeholder="Digite a senha ADM" required>
+        <label>ID Master de Acesso:</label>
+        <input type="text" id="senha-admin" placeholder="Digite o ID ADM" required>
         <div id="erro-login" style="color: var(--danger); font-size: 13px; margin-bottom: 15px; display: none; font-weight: 600;"></div>
         <button type="submit" class="btn" id="btn-entrar" style="width: 100%; margin-top: 0;">Entrar no Sistema</button>
     </form>
@@ -123,7 +123,7 @@
 
 <script>
     const URL_GAS = 'https://script.google.com/macros/s/AKfycbw4WG8kjvhsYHwn0lKd59q8kMonyKltpFw5AmvCgWC2OAFvST7RKq2M9OkycFdw2LmP/exec';
-    let dadosFechamentoAtuais = []; // Armazena dados do fechamento para o PDF
+    let dadosFechamentoAtuais = []; 
 
     window.onload = function() {
         if (sessionStorage.getItem('adminLogado') === 'true') {
@@ -153,7 +153,7 @@
                 sessionStorage.setItem('adminSenha', senha);
                 exibirDashboard();
             } else {
-                erro.innerText = resultado.mensagem || "Senha Master incorreta!";
+                erro.innerText = resultado.mensagem || "ID Master incorreto!";
                 erro.style.display = 'block';
                 btn.innerText = 'Entrar no Sistema';
                 btn.disabled = false;
@@ -279,7 +279,6 @@
         }
     }
 
-    // Função que abre uma nova janela otimizada, estilizada e limpa para impressão como PDF do relatório
     function gerarPDFRelatorio() {
         if (dadosFechamentoAtuais.length === 0) {
             alert("Não há dados de fechamento disponíveis para gerar o PDF.");
@@ -289,7 +288,6 @@
         const dataAtual = new Date().toLocaleDateString('pt-BR');
         const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-        // Calcula total do período
         let totalConsumoPeriodo = 0;
         let linhasTabelaHtml = "";
         
@@ -306,7 +304,6 @@
             `;
         });
 
-        // Abre uma nova aba com o layout impecável do relatório
         const janelaImpressao = window.open('', '_blank');
         janelaImpressao.document.write(`
             <!DOCTYPE html>
